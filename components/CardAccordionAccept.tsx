@@ -15,6 +15,7 @@ import CardAnimation from "./CardAnimation";
 import { notify_delete, notify_error, notify_laoding, notify_success } from "@/app/loading";
 import { founderOpenDispute } from "@/lib/NexusProgram/escrow/CopenDipute";
 import { ClientTerminat } from "@/lib/NexusProgram/escrow/CTerminate";
+import { RequestNewSubmition } from "@/lib/NexusProgram/escrow/RequestNewSubmition";
 
 export default function CardAccordionAccept({
   children,
@@ -106,6 +107,26 @@ export default function CardAccordionAccept({
         wallet,
         escrowInfo.escrow,
         escrowInfo.reciever,
+      );
+      notify_delete();
+      notify_success("Transaction Success!");
+      // showApprove()
+    } catch (e) {
+      notify_delete();
+      notify_error("Transaction Failed!");   
+      console.log(e);
+    }
+  };
+
+  const RequestNewSubmitions = async () => {
+    try {
+      notify_laoding("Transaction Pending...!");
+      const tx = await RequestNewSubmition(
+        anchorWallet,
+        connection,
+        wallet,
+        escrowInfo.escrow,
+        data[0].pubkey,
       );
       notify_delete();
       notify_success("Transaction Success!");
@@ -229,13 +250,24 @@ export default function CardAccordionAccept({
                 Cancel Contract, Termination
               </Button>}
 
-              {escrowInfo.status == 4 && <Button
+              {escrowInfo.status == 4 && 
+              <>
+              <Button
                 variant="contained"
                 onClick={() => OpenDispute()}
                 className="!normal-case !text-xs !py-3 !bg-black !text-white !col-span-1 !rounded-md"
               >
                 Dispute and Request termination
-              </Button>}
+              </Button>
+              <Button
+                variant="contained"
+                onClick={() => RequestNewSubmitions()}
+                className="!normal-case !text-xs !py-3 !bg-black !text-white !col-span-1 !rounded-md"
+              >
+                Request New Submition
+              </Button>
+              </>
+              }
             </CardAnimation>
           )}
           {openDispute && (
