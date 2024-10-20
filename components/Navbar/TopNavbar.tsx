@@ -131,7 +131,7 @@ export default function Example() {
                     className="h-11 w-auto cursor-pointer"
                     src={Logo}
                     alt="logo"
-                    onClick={() => router.push("/")}
+                    onClick={() => router.push("/nexusexplore")}
                   />
                 </div>
                 <div className="hidden sm:block sm:absolute top-[50%] translate-y-[-50%] left-[50%] translate-x-[-55%] z-30">
