@@ -169,7 +169,7 @@ export default function page() {
       editForm.linkedin,
       editForm.twitter,
       editForm.country,
-      editForm.timezone,
+      editForm.timeZone,
       wallet,
     );
       notify_delete();
@@ -190,8 +190,12 @@ const output = (value: string, name: string) => {
 }
 
 const stringLengthHandle = (string: string) => {
+  console.log("stringLengthHandle")
+  console.log(string)
   if (string.length > 25) {
     return (string.slice(0, 20) + "..." + string.slice(string.length - 4 , string.length))
+  } else {
+    return string
   }
 }
 
@@ -349,7 +353,7 @@ const stringLengthHandle = (string: string) => {
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-[14px] px-1">
               <div className={`${cardStyle} !py-4`}>{userInfo && output(userInfo.category, "Category")}</div>
-              {/* <div className={`${cardStyle} !py-4`}>{userInfo && output(userInfo.country, "Country")}</div> */}
+              <div className={`${cardStyle} !py-4`}>{userInfo && output(userInfo.country, "Country")}</div>
               {/* <div className={`${cardStyle} !py-4`}>{userInfo && output(userInfo.timezone, "Time Zone")}</div> */}
             </div>
 

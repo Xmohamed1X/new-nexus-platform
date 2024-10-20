@@ -9,6 +9,7 @@ import { get_apply_info } from "@/lib/NexusProgram/escrow/utils.ts/get_apply_inf
 import { get_userr_info } from "@/lib/NexusProgram/escrow/utils.ts/get_userr_info";
 import { USER_PREFIX } from "@/lib/constants/constants";
 import { inputStyle } from "@/lib/styles/styles";
+import { backendApi } from "@/lib/utils/api.util";
 import { formatTime, timeLeft } from "@/lib/utils/time_formatter";
 import coin from "@/public/coin.svg";
 import dragon from "@/public/dragon.svg";
@@ -32,6 +33,7 @@ export default function page() {
   const [open, setOpen] = useState(false);
   const [applyInfo, setApplyInfo] = useState<any>();
   const [telegram, setTelegram] = useState<string>("");
+  const [escrowDateInfo, setEscrowDateInfo] = useState<any>();
 
   function handleCloseModal() {
     setOpen(false);
@@ -100,6 +102,11 @@ export default function page() {
         freelancer
       );
 
+      const databaseEscrowInfo = await backendApi.get(`/escrow/${address}`);
+      console.log(databaseEscrowInfo);
+      console.log("databaseEscrowInfo");
+
+      setEscrowDateInfo((databaseEscrowInfo as any)!.data);
       info!.founderInfo = founder_info;
       info!.freelancer = freelancer_info;
       console.log("infoOOOOOOOOOOOO " + info);
@@ -271,8 +278,8 @@ export default function page() {
                   className="line-clamp-5 text-5 text-[12px] leading-7 cursor-pointer h-14"
                   onClick={() => setShowDescription(true)}
                 >
-                  {escrowInfo && escrowInfo.description !== ""
-                    ? escrowInfo.description
+                  {escrowDateInfo && escrowDateInfo.description !== ""
+                    ? escrowDateInfo.description
                     : "--"}
                 </div>
               </div>
@@ -360,7 +367,7 @@ export default function page() {
         </Card>
       </Modal>
 
-      <Modal
+      {escrowDateInfo && escrowDateInfo.description && <Modal
         open={showDescription}
         onClose={() => setShowDescription(false)}
         className="grid place-items-center"
@@ -376,32 +383,10 @@ export default function page() {
           <div className="text-base font-[500]">Description</div>
 
           <p className="mt-5 p-2 text-sm leading-7">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum. <br />
-            <br />
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum. <br />
-            <br />
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.
+            {escrowDateInfo.description}
           </p>
         </Card>
-      </Modal>
+      </Modal>}
     </div>
   );
 }

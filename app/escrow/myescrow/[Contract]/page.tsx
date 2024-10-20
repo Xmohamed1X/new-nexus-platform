@@ -243,9 +243,9 @@ export default function page() {
   }
 
   useEffect(() => {
-    if (escrowInfo) {
+    if (escrowInfo && escrowDateInfo) {
       setTitleInput(escrowInfo.contractName || "Build a team dashboard");
-      setDescriptionInput(escrowInfo.description || "No description available");
+      setDescriptionInput(escrowDateInfo.description || "No description available");
       setOriginalDescription(
         escrowInfo.description || "No description available"
       );

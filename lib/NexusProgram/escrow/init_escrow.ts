@@ -77,7 +77,7 @@ export async function initEscrow(
       amount: new BN(amount * 1_000_000_000),
       telegramLink: telegram_link,
       materials: materials,
-      description: description,
+      description: "description",
     })
 
     .accounts({
