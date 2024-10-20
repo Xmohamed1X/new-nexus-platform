@@ -106,7 +106,7 @@ export async function update_user(
   // wallet.sendTransaction(tx, connection, {
   //   preflightCommitment: 'confirmed',
   // });
-
+  console.log(timezone)
   const apiResponse = await backendApi.patch(`/nexus-user/${anchorWallet.publicKey.toBase58()}`, {
     name,
     image: "https://www.youtube.com/",
@@ -120,7 +120,7 @@ export async function update_user(
     portfolio: portfolio,
     resume: resume,
     // tosp,
-    timezone,
+    TimeZone: timezone,
     country,
     address: anchorWallet.publicKey.toBase58(),
     twitter: "https://www.youtube.com/",
