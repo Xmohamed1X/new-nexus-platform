@@ -173,9 +173,13 @@ export default function page() {
   const router = useRouter();
 
   const links = (link: string) => {
+    console.log(link);
     if (link.length > 0) {
+      const http = "https://www.";
+      link = http.concat(link);
+      link = link.replace("https://www.", "https://www.");
       window.open(link, "_blank");
-    }    
+    }
   };
   const [showDescription, setShowDescription] = useState(false);
 

@@ -16,6 +16,7 @@ export default function CardApp({
   escrow,
   apply,
   escrowInfo,
+  chat
 }: any) {
   const links = (_link: string) => {
     window.open(_link, "_blank");
@@ -48,7 +49,7 @@ export default function CardApp({
       </Stack>
 
       <Button
-        onClick={() => links(escrowInfo.link)}
+        onClick={() => links(chat)}
         variant="contained"
         className="!normal-case !text-[11px] !text-white !bg-second !px-5 !pt-2 !h-fit"
       >
