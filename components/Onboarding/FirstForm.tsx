@@ -1,6 +1,11 @@
 "use client";
 
-import { notify_delete, notify_error, notify_laoding, notify_success } from "@/app/loading";
+import {
+  notify_delete,
+  notify_error,
+  notify_laoding,
+  notify_success,
+} from "@/app/loading";
 import { FormContext } from "@/contexts/FormContext";
 import { OnboardingScreenForm } from "@/lib/types/types";
 import { init_user } from "@/lib/user/init_user";
@@ -8,7 +13,11 @@ import { get_user_info } from "@/lib/user/utils/user_info";
 import { zodResolver } from "@hookform/resolvers/zod";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import { Button, Stack } from "@mui/material";
-import { useAnchorWallet, useConnection, useWallet } from "@solana/wallet-adapter-react";
+import {
+  useAnchorWallet,
+  useConnection,
+  useWallet,
+} from "@solana/wallet-adapter-react";
 import { useRouter } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -40,64 +49,64 @@ export default function FirstForm({ handleGoToStep }: any) {
 
   const onSubmit: SubmitHandler<OnboardingScreenForm> = async (data: any) => {
     try {
-    console.log("wow");
-    if (!isValid) {
-      return console.log("still some empty;")
-    }
-    notify_laoding("Transaction Pending...!");
-    console.log(watch("email"));
+      console.log("wow");
+      if (!isValid) {
+        return console.log("still some empty;");
+      }
+      notify_laoding("Transaction Pending...!");
+      console.log(watch("email"));
 
-    await init_user(
-      anchorWallet,
-      connection,
-      // watch.sdfdsf,
-      watch("username"),
-      "",
-      "",
-      "",
-      "",
-      watch("email"),
-      "",
-      // "payment_rate_per_hour",
-      0,
-      // "nogotion",
-      true,
-      "",
-      "",
-      "",
-      "",
-      "",
-      watch("twitterProfile"),
-      wallet
-    );
+      await init_user(
+        anchorWallet,
+        connection,
+        // watch.sdfdsf,
+        watch("username"),
+        "",
+        "",
+        "",
+        "",
+        watch("email"),
+        "",
+        // "payment_rate_per_hour",
+        0,
+        // "nogotion",
+        true,
+        "",
+        "",
+        "",
+        "",
+        "",
+        watch("twitterProfile"),
+        wallet
+      );
 
-    const formData = new FormData();
-    if (imageFile) {
-      formData.append("profileImage", imageFile);
-    }
+      const formData = new FormData();
+      if (imageFile) {
+        formData.append("uploadedFile", imageFile);
+      }
 
-    for (const key in data) {
-      formData.append(key, data[key as keyof OnboardingScreenForm] as string);
-    }
+      for (const key in data) {
+        formData.append(key, data[key as keyof OnboardingScreenForm] as string);
+      }
 
-    console.log("Form Data:", {
-      ...data,
-      profileImage: imageFile,
-      formData,
-    });
+      console.log("Form Data:", {
+        ...data,
+        profileImage: imageFile,
+        formData,
+      });
 
-    handleGoToStep("second");
-    notify_delete();
-    notify_success("Transaction Success!")
-  } catch (e) {
-    notify_delete();
-    notify_error("Transaction Failed!");   
-    console.log(e);
+      handleGoToStep("second");
+      notify_delete();
+      notify_success("Transaction Success!");
+    } catch (e) {
+      notify_delete();
+      notify_error("Transaction Failed!");
+      console.log(e);
     }
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("wow1")
+    console.log("wow1");
     const file = e.target.files?.[0];
     if (file) {
       setImageFile(file);
@@ -118,7 +127,6 @@ export default function FirstForm({ handleGoToStep }: any) {
 
   const router = useRouter();
 
-
   async function check_user() {
     try {
       const user_info = await get_user_info(anchorWallet, connection);
@@ -137,7 +145,6 @@ export default function FirstForm({ handleGoToStep }: any) {
     check_user();
   }, [anchorWallet, anchorWallet?.publicKey]);
 
-
   // async function initialize_user() {
   //   try {
   //     // if (profile_overview.length > 120) {
@@ -151,7 +158,7 @@ export default function FirstForm({ handleGoToStep }: any) {
 
   //     // const watchedUsername = watch("username");
   //     // const watchedTwitterProfile = watch("twitterProfile");
-  //     // const watchedEmail = watch("email");    
+  //     // const watchedEmail = watch("email");
   //     if (!isValid) {
   //       return console.log("still some empty;")
   //     }
