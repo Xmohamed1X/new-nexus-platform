@@ -273,9 +273,9 @@ export default function page() {
 
               <Stack flexDirection="row" justifyContent="center" pt={"15%"}>
                 {escrow_info &&
-                  escrow_info.founderInfo.telegramId.length > 0 ? (
+                  escrow_info.telegramLink.length > 0 ? (
                   <Button
-                    onClick={() => links(escrow_info.founderInfo.telegramId)}
+                    onClick={() => links(escrow_info.telegramLink)}
                     variant="contained"
                     className="!text-sm !px-10 !py-2 !capitalize !font-semibold !bg-second !w-56"
                   >

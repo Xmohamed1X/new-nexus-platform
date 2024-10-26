@@ -30,6 +30,7 @@ import { approveFreelancer } from "@/lib/NexusProgram/escrow/approveFreelancer";
 import { updateEscrow } from "@/lib/NexusProgram/escrow/update_escrow";
 import { rejectFreelancerSubmit } from "@/lib/NexusProgram/escrow/rejectFreelancerSubmit";
 import { approvePayment } from "@/lib/NexusProgram/escrow/ApprovePayment";
+import { cancelEscrow } from "@/lib/NexusProgram/escrow/cancel_escrow";
 
 export default function page() {
   const [open, setOpen] = useState(false);
@@ -290,7 +291,7 @@ export default function page() {
       console.log(escrowDateInfo)
 
       console.log(descriptionInput)
-      
+
       const apiResponse = await backendApi.patch(`escrow/update/${address}`,
         {
           description: descriptionInput,
@@ -398,6 +399,25 @@ export default function page() {
         wallet,
         escrowInfo.escrow,
         escrowInfo.reciever,
+      );
+      notify_delete();
+      notify_success("Transaction Success!");
+      handleOpenDispute()
+    } catch (e) {
+      notify_delete();
+      notify_error("Transaction Failed!");   
+      console.log(e);
+    }
+  };
+  
+  const terminating = async () => {
+    try {
+      notify_laoding("Transaction Pending...!");
+      const tx = await cancelEscrow(
+        anchorWallet,
+        connection,
+        escrowInfo.escrow,
+        wallet,
       );
       notify_delete();
       notify_success("Transaction Success!");
@@ -576,13 +596,24 @@ export default function page() {
                 cancel={handleCancelProjectTermination}
                 escrowDateInfo={escrowDateInfo}
               >
-                {escrowInfo && escrowInfo.status !== 5 && escrowInfo.status !== 3 && <Stack flexDirection="row" gap={1}>
+                {escrowInfo && escrowInfo.status !== 5 && escrowInfo.status !== 3 && escrowInfo.status !== 6 && escrowInfo.status !== 1 && <Stack flexDirection="row" gap={1}>
                   <Button
                     variant="contained"
                     onClick={() => {
                       setShowTerminate(true);
                       setShowReject(false);
                       setOpenDispute(false);
+                    }}
+                    className="!text-xs !bg-white !font-semibold !normal-case !text-second !px-4 !py-2"
+                  >
+                    Terminate
+                  </Button>
+                </Stack>}
+                {escrowInfo && escrowInfo.status == 1 && <Stack flexDirection="row" gap={1}>
+                  <Button
+                    variant="contained"
+                    onClick={() => {
+                      terminating()
                     }}
                     className="!text-xs !bg-white !font-semibold !normal-case !text-second !px-4 !py-2"
                   >

@@ -66,7 +66,7 @@ export async function approvePayment(
         anchorWallet.publicKey,
         userMintTokenAccount,
         reciever,
-        MINT!
+        MINT! 
       )
     );
     const signature = await wallet.sendTransaction(ataTransaction, connection);

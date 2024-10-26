@@ -91,7 +91,6 @@ export default function CardAccordionAccept({
       );
       notify_delete();
       notify_success("Transaction Success!");
-      cancel();
     } catch (e) {
       notify_delete();
       notify_error("Transaction Failed!");   
@@ -268,7 +267,7 @@ export default function CardAccordionAccept({
                 onClick={() => OpenDispute()}
                 className="!normal-case !text-xs !py-3 !bg-red-700 !text-white !col-span-1 !rounded-md"
               >
-                Dispute and Request termination
+                Dispute and Request Refund
               </Button>
               <Button
                 variant="contained"
