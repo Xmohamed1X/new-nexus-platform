@@ -148,7 +148,9 @@ export default function page() {
       console.log(info);
       console.log("APPLYYYYYYYYYYYYYYYYYYYYYYDATAINFOOOOO");
       console.log(data);
-      setApplys(info);
+      setApplys(info
+        // .filter((apply) => apply.status !== "Rejected")
+      );
       // notify_delete();
       // notify_success("Transaction Success!")
     } catch (e) {
@@ -697,7 +699,7 @@ export default function page() {
                       (ap: any) =>
                         ap.user.toBase58() !== escrowInfo.reciever.toBase58()
                     )
-                  : applys
+                  : applys.filter((apply) => apply.status !== "Rejected")
               }
               startProject={handleShowStartProject}
               setSelect={setSelect}
@@ -743,7 +745,7 @@ export default function page() {
         </Card>
       </Modal>
 
-      {applys && escrowInfo && escrowInfo.reciever && <Modal
+      {applys && applys.length > 0 && escrowInfo && escrowInfo.reciever && <Modal
         open={showApproveSubmit}
         onClose={() => setShowApproveSubmit(false)}
         className="grid place-items-center"
@@ -770,7 +772,7 @@ export default function page() {
       </Modal>}
 
     {/* this is for the Reject popUP */}
-      {applys && escrowInfo && escrowInfo.reciever && <Modal
+      {applys && applys.length > 0 && escrowInfo && escrowInfo.reciever && <Modal
         open={showRejectSubmit}
         onClose={() => setShowRejectSubmit(false)}
         className="grid place-items-center"

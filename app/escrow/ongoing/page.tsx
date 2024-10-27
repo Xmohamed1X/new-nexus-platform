@@ -49,7 +49,7 @@ export default function page() {
 
       console.log("pending");
       console.log(pending.filter((p) => p.status != "Success"));
-      setPendingEscrow(pending.filter((p) => p.status != "Success"));
+      setPendingEscrow(pending.filter((p) => (p.status != "Success" && p.status != "Rejected")));
       console.log(pending[0].user.toBase58());
 
       /// GET THE APPLY of the freelancerAddress

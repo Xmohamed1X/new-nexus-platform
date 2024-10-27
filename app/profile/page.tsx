@@ -371,7 +371,7 @@ export default function page() {
               <div className={`${cardStyle} !py-4`}>
                 {userInfo && output(userInfo.country, "Country")}
               </div>
-              {/* <div className={`${cardStyle} !py-4`}>{userInfo && output(userInfo.timezone, "Time Zone")}</div> */}
+              <div className={`${cardStyle} !py-4`}>{userInfo && output(userInfo.timeZone, "Time Zone")}</div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 px-1">
