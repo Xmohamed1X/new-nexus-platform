@@ -19,8 +19,18 @@ import TimeZoneInput from "@/components/TimeZoneInput";
 import CountryInput from "@/components/CountryInput";
 import ExpertiseLevelInput from "@/components/ExpertiseLevelInput";
 import { update_user } from "@/lib/user/update_user";
-import { useAnchorWallet, useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { notify_delete, notify_error, notify_laoding, notify_success, PROGRAM_ID } from "../layout";
+import {
+  useAnchorWallet,
+  useConnection,
+  useWallet,
+} from "@solana/wallet-adapter-react";
+import {
+  notify_delete,
+  notify_error,
+  notify_laoding,
+  notify_success,
+  PROGRAM_ID,
+} from "../layout";
 import { get_userr_info } from "@/lib/NexusProgram/escrow/utils.ts/get_userr_info";
 import { USER_PREFIX } from "@/lib/constants/constants";
 import { web3 } from "@project-serum/anchor";
@@ -64,15 +74,14 @@ export default function page() {
     },
   });
 
-
   const get_user_info = async () => {
     try {
       const [freelancer] = web3.PublicKey.findProgramAddressSync(
-          [anchorWallet!.publicKey.toBuffer(), Buffer.from(USER_PREFIX)],
-          PROGRAM_ID
-        );
+        [anchorWallet!.publicKey.toBuffer(), Buffer.from(USER_PREFIX)],
+        PROGRAM_ID
+      );
 
-        console.log(freelancer.toBase58())
+      console.log(freelancer.toBase58());
 
       const user_info = await get_userr_info(
         anchorWallet,
@@ -82,26 +91,27 @@ export default function page() {
       console.log("user_info");
       console.log(user_info);
 
-      const databaseEscrowInfo = await backendApi.get(`/nexus-user/${anchorWallet?.publicKey.toBase58()}`);
+      const databaseEscrowInfo = await backendApi.get(
+        `/nexus-user/${anchorWallet?.publicKey.toBase58()}`
+      );
 
-      console.log("databaseEscrowInfo")
-      console.log(databaseEscrowInfo)
+      console.log("databaseEscrowInfo");
+      console.log(databaseEscrowInfo);
 
       setEditForm({
-        username: (databaseEscrowInfo as any)!.data.name, 
-        roleDescription: (databaseEscrowInfo as any)!.data.roles[0], 
-        levelOfExpertise: (databaseEscrowInfo as any)!.data.levelOfExpertise, 
-        paymentRate: (databaseEscrowInfo as any)!.data.paymentRatePerHour, 
-        profileOverview: (databaseEscrowInfo as any)!.data.profileOverview, 
-        category: (databaseEscrowInfo as any)!.data.category, 
-        country: (databaseEscrowInfo as any)!.data.country, 
-        timeZone: (databaseEscrowInfo as any)!.data.timezone, 
-        linkResume: (databaseEscrowInfo as any)!.data.resume, 
-        linkPortfolio: (databaseEscrowInfo as any)!.data.portfolio, 
-      })
+        username: (databaseEscrowInfo as any)!.data.name,
+        roleDescription: (databaseEscrowInfo as any)!.data.roles[0],
+        levelOfExpertise: (databaseEscrowInfo as any)!.data.levelOfExpertise,
+        paymentRate: (databaseEscrowInfo as any)!.data.paymentRatePerHour,
+        profileOverview: (databaseEscrowInfo as any)!.data.profileOverview,
+        category: (databaseEscrowInfo as any)!.data.category,
+        country: (databaseEscrowInfo as any)!.data.country,
+        timeZone: (databaseEscrowInfo as any)!.data.timezone,
+        linkResume: (databaseEscrowInfo as any)!.data.resume,
+        linkPortfolio: (databaseEscrowInfo as any)!.data.portfolio,
+      });
 
       setUserInfo((databaseEscrowInfo as any).data);
-
     } catch (e) {
       console.log(e);
     }
@@ -126,79 +136,81 @@ export default function page() {
   useEffect(() => {
     if (!anchorWallet) return;
     get_user_info();
-    getOngoingEscrow()
-  }, [anchorWallet])
-
-
+    getOngoingEscrow();
+  }, [anchorWallet]);
 
   const onSubmit = async () => {
     try {
       notify_laoding("Transaction Pending...");
-    console.log("wow");
-    console.log(editForm);
+      console.log("wow");
+      console.log(editForm);
 
-    // username: null,
-    // roleDescription: null,
-    // levelOfExpertise: null,
-    // paymentRate: null,
-    // profileOverview: profileOverview,
-    // category: null,
-    // country: null,
-    // timeZone: null,
-    // linkResume: null,
-    // linkPortfolio: null,
+      // username: null,
+      // roleDescription: null,
+      // levelOfExpertise: null,
+      // paymentRate: null,
+      // profileOverview: profileOverview,
+      // category: null,
+      // country: null,
+      // timeZone: null,
+      // linkResume: null,
+      // linkPortfolio: null,
 
-    await update_user(
-      anchorWallet,
-      connection,
-      // watch.sdfdsf,
-      editForm.username,
-      "https://www.youtube.com/",
-      editForm.category,
-      editForm.roleDescription,
-      editForm.levelOfExpertise,
-      editForm.others,
-      editForm.profileOverview,
-      Number(editForm.paymentRate),
-      editForm.nigotion,
-      editForm.linkResume,
-      editForm.linkPortfolio,
-      editForm.discord_id,
-      editForm.telegram_id,
-      editForm.website,
-      editForm.linkedin,
-      editForm.twitter,
-      editForm.country,
-      editForm.timeZone,
-      wallet,
-    );
+      await update_user(
+        anchorWallet,
+        connection,
+        // watch.sdfdsf,
+        editForm.username,
+        "https://www.youtube.com/",
+        editForm.category,
+        editForm.roleDescription,
+        editForm.levelOfExpertise,
+        editForm.others,
+        editForm.profileOverview,
+        Number(editForm.paymentRate),
+        editForm.nigotion,
+        editForm.linkResume,
+        editForm.linkPortfolio,
+        editForm.discord_id,
+        editForm.telegram_id,
+        editForm.website,
+        editForm.linkedin,
+        editForm.twitter,
+        editForm.country,
+        editForm.timeZone,
+        wallet
+      );
       notify_delete();
-      notify_success("Transaction Success!")
+      notify_success("Transaction Success!");
+      setShowEdit(false);
     } catch (e) {
       notify_delete();
-      notify_error("Transaction Failed!");      
-      console.log(e); 
-  }
-}
+      notify_error("Transaction Failed!");
+      console.log(e);
+    }
+  };
 
-const output = (value: string, name: string) => {
-  if (value.length > 0) {
-    return value
-  } else {
-    name
-  }
-}
+  const output = (value: string, name: string) => {
+    if (value.length > 0) {
+      return value;
+    } else {
+      name;
+    }
+  };
 
-const stringLengthHandle = (string: string) => {
-  console.log("stringLengthHandle")
-  console.log(string)
-  if (string.length > 25) {
-    return (string.slice(0, 20) + "..." + string.slice(string.length - 4 , string.length))
-  } else {
-    return string
-  }
-}
-
+  const stringLengthHandle = (string: string) => {
+    console.log("stringLengthHandle");
+    console.log(string);
+    if (string.length > 25) {
+      return (
+        string.slice(0, 20) +
+        "..." +
+        string.slice(string.length - 4, string.length)
+      );
+    } else {
+      return string;
+    }
+  };
 
   return (
     <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-5 gap-5">
@@ -267,12 +279,13 @@ const stringLengthHandle = (string: string) => {
 
         <div className="grid grid-cols-2 gap-4 mt-[14px] ">
           {/* {menu1.map((el, i) => ( */}
-            <div className={`${cardStyle} !py-4`}>
-              {userInfo && output(userInfo.levelOfExpertise, "Level Of Expertise")}
-            </div>
-            <div className={`${cardStyle} !py-4`}>
+          <div className={`${cardStyle} !py-4`}>
+            {userInfo &&
+              output(userInfo.levelOfExpertise, "Level Of Expertise")}
+          </div>
+          <div className={`${cardStyle} !py-4`}>
             {userInfo && Number(userInfo.paymentRatePerHour)}
-            </div>
+          </div>
           {/* ))} */}
         </div>
       </div>
@@ -352,14 +365,24 @@ const stringLengthHandle = (string: string) => {
             </Card>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-[14px] px-1">
-              <div className={`${cardStyle} !py-4`}>{userInfo && output(userInfo.category, "Category")}</div>
-              <div className={`${cardStyle} !py-4`}>{userInfo && output(userInfo.country, "Country")}</div>
-              {/* <div className={`${cardStyle} !py-4`}>{userInfo && output(userInfo.timezone, "Time Zone")}</div> */}
+              <div className={`${cardStyle} !py-4`}>
+                {userInfo && output(userInfo.category, "Category")}
+              </div>
+              <div className={`${cardStyle} !py-4`}>
+                {userInfo && output(userInfo.country, "Country")}
+              </div>
+              <div className={`${cardStyle} !py-4`}>{userInfo && output(userInfo.timeZone, "Time Zone")}</div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 px-1">
-              <div className={`${cardStyle} !py-4`}>{userInfo && stringLengthHandle(output(userInfo.portfolio, "Portfolio")!)}</div>
-              <div className={`${cardStyle} !py-4`}>{userInfo && stringLengthHandle(output(userInfo.resume, "Resume")!)}</div>
+              <div className={`${cardStyle} !py-4`}>
+                {userInfo &&
+                  stringLengthHandle(output(userInfo.portfolio, "Portfolio")!)}
+              </div>
+              <div className={`${cardStyle} !py-4`}>
+                {userInfo &&
+                  stringLengthHandle(output(userInfo.resume, "Resume")!)}
+              </div>
             </div>
           </motion.div>
         )}
@@ -373,15 +396,28 @@ const stringLengthHandle = (string: string) => {
         >
           <Card width="md">
             <Stack spacing={3}>
-              <TextField
-                label="Username"
-                variant="outlined"
-                value={editForm.username}
-                onChange={(e) =>
-                  setEditForm({ ...editForm, username: e.target.value })
-                }
-                sx={inputMuiFontSize}
-              />
+              <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
+                <TextField
+                  label="Username"
+                  variant="outlined"
+                  value={editForm.username}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, username: e.target.value })
+                  }
+                  sx={inputMuiFontSize}
+                />
+
+                <TextField
+                  label="Twitter Id"
+                  variant="outlined"
+                  value={editForm.twitterId}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, twitterId: e.target.value })
+                  }
+                  sx={inputMuiFontSize}
+                  style={{ width: "20rem" }}
+                />
+              </Stack>
 
               <div className="grid gap-6 grid-cols-1 sm:grid-cols-3">
                 <TextField

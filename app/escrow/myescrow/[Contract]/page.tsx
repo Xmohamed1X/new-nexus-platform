@@ -30,6 +30,7 @@ import { approveFreelancer } from "@/lib/NexusProgram/escrow/approveFreelancer";
 import { updateEscrow } from "@/lib/NexusProgram/escrow/update_escrow";
 import { rejectFreelancerSubmit } from "@/lib/NexusProgram/escrow/rejectFreelancerSubmit";
 import { approvePayment } from "@/lib/NexusProgram/escrow/ApprovePayment";
+import { cancelEscrow } from "@/lib/NexusProgram/escrow/cancel_escrow";
 
 export default function page() {
   const [open, setOpen] = useState(false);
@@ -38,6 +39,7 @@ export default function page() {
   const [applys, setApplys] = useState<any[]>();
   const [showStartProject, setShowStartProject] = useState(false);
   const [showApproveSubmit, setShowApproveSubmit] = useState(false);
+  const [showRejectSubmit, setShowRejectSubmit] = useState(false);
   const [showTerminate, setShowTerminate] = useState(false);
   const [showReject, setShowReject] = useState(false);
   const [showApprove, setShowApprove] = useState(false);
@@ -142,10 +144,13 @@ export default function page() {
 
       const data = await backendApi.get(`/freelancer?escrowAddress=${address}`);
 
-      console.log("apply");
-      console.log(data);
+      console.log("APPLYYYYYYYYYYYYYYYYYYYYYY");
       console.log(info);
-      setApplys(info);
+      console.log("APPLYYYYYYYYYYYYYYYYYYYYYYDATAINFOOOOO");
+      console.log(data);
+      setApplys(info
+        // .filter((apply) => apply.status !== "Rejected")
+      );
       // notify_delete();
       // notify_success("Transaction Success!")
     } catch (e) {
@@ -195,6 +200,10 @@ export default function page() {
 
   function handleShowApproveSubmit() {
     setShowApproveSubmit(true);
+  }
+
+  function handleShowRejectSubmit() {
+    setShowRejectSubmit(true);
   }
 
   function handleShowApprove() {
@@ -277,6 +286,33 @@ export default function page() {
       });
   };
 
+  const updateDescription = async () => {
+    try {
+      notify_laoding("Transaction Pending...!")
+      const address = pathname.replace("/escrow/myescrow/", "");
+      console.log(escrowDateInfo)
+
+      console.log(descriptionInput)
+
+      const apiResponse = await backendApi.patch(`escrow/update/${address}`,
+        {
+          description: descriptionInput,
+          deadline: Number(escrowInfo.deadline),
+          telegramLink: "escrowInfo.telegramLink",
+          private: escrowDateInfo.private
+        }
+      );
+      console.log(apiResponse);
+      notify_delete();
+      notify_success("Transaction Success!");
+      handleSaveDescription()
+    } catch (e) {
+      notify_delete();
+      notify_error("Transaction Failed!");
+      console.log(e);
+    }
+  }
+
   const privates = async (privat: boolean) => {
     try {
       notify_laoding("Transaction Pending...!")
@@ -339,7 +375,7 @@ export default function page() {
             ap.user.toBase58() == escrowInfo.reciever.toBase58()
         )
       : []
-
+      
       const tx = await rejectFreelancerSubmit(
         anchorWallet,
         connection,
@@ -365,6 +401,25 @@ export default function page() {
         wallet,
         escrowInfo.escrow,
         escrowInfo.reciever,
+      );
+      notify_delete();
+      notify_success("Transaction Success!");
+      handleOpenDispute()
+    } catch (e) {
+      notify_delete();
+      notify_error("Transaction Failed!");   
+      console.log(e);
+    }
+  };
+  
+  const terminating = async () => {
+    try {
+      notify_laoding("Transaction Pending...!");
+      const tx = await cancelEscrow(
+        anchorWallet,
+        connection,
+        escrowInfo.escrow,
+        wallet,
       );
       notify_delete();
       notify_success("Transaction Success!");
@@ -522,7 +577,7 @@ export default function page() {
 
         <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
           <Stack spacing={2}>
-            {escrowInfo && applys && (
+            {escrowInfo && escrowDateInfo && applys && (
               <CardAccordionAccept
                 data={
                   escrowInfo.reciever
@@ -538,17 +593,29 @@ export default function page() {
                 escrowInfo={escrowInfo}
                 showTerminate={showTerminate}
                 showApprove={handleShowApproveSubmit}
-                reject={showReject}
+                showReject={handleShowRejectSubmit}
                 openDispute={openDispute}
                 cancel={handleCancelProjectTermination}
+                escrowDateInfo={escrowDateInfo}
               >
-                {escrowInfo && escrowInfo.status !== 5 && escrowInfo.status !== 3 && <Stack flexDirection="row" gap={1}>
+                {escrowInfo && escrowInfo.status !== 5 && escrowInfo.status !== 3 && escrowInfo.status !== 6 && escrowInfo.status !== 1 && <Stack flexDirection="row" gap={1}>
                   <Button
                     variant="contained"
                     onClick={() => {
                       setShowTerminate(true);
                       setShowReject(false);
                       setOpenDispute(false);
+                    }}
+                    className="!text-xs !bg-white !font-semibold !normal-case !text-second !px-4 !py-2"
+                  >
+                    Terminate
+                  </Button>
+                </Stack>}
+                {escrowInfo && escrowInfo.status == 1 && <Stack flexDirection="row" gap={1}>
+                  <Button
+                    variant="contained"
+                    onClick={() => {
+                      terminating()
                     }}
                     className="!text-xs !bg-white !font-semibold !normal-case !text-second !px-4 !py-2"
                   >
@@ -632,7 +699,7 @@ export default function page() {
                       (ap: any) =>
                         ap.user.toBase58() !== escrowInfo.reciever.toBase58()
                     )
-                  : applys
+                  : applys.filter((apply) => apply.status !== "Rejected")
               }
               startProject={handleShowStartProject}
               setSelect={setSelect}
@@ -678,7 +745,7 @@ export default function page() {
         </Card>
       </Modal>
 
-      {applys && escrowInfo && escrowInfo.reciever && <Modal
+      {applys && applys.length > 0 && escrowInfo && escrowInfo.reciever && <Modal
         open={showApproveSubmit}
         onClose={() => setShowApproveSubmit(false)}
         className="grid place-items-center"
@@ -700,6 +767,33 @@ export default function page() {
             className="!normal-case !text-black !text-sm !bg-green-500 !px-8 !py-2"
           >
             Approve
+          </Button>
+        </ApproveModal>
+      </Modal>}
+
+    {/* this is for the Reject popUP */}
+      {applys && applys.length > 0 && escrowInfo && escrowInfo.reciever && <Modal
+        open={showRejectSubmit}
+        onClose={() => setShowRejectSubmit(false)}
+        className="grid place-items-center"
+      >
+        <ApproveModal
+          contractor={applys?.filter(
+                (ap: any) =>
+                  ap.user.toBase58() === escrowInfo.reciever.toBase58()
+              )[0].userName
+            }
+          amount={Number(escrowInfo.amount) / 1000_000_000}
+          title="Confirmation"
+          messageTitle="Are you sure you want to reject submission??"
+          messageDescription=""
+        >
+          <Button
+            onClick={() => RejectSubmit()}
+            variant="contained"
+            className="!normal-case !text-black !text-sm !bg-red-700 !px-8 !py-2"
+          >
+            Reject
           </Button>
         </ApproveModal>
       </Modal>}
@@ -775,7 +869,7 @@ export default function page() {
           <div className="flex justify-end gap-3 mt-4">
             <Button
               variant="contained"
-              onClick={handleSaveDescription}
+              onClick={() => updateDescription()}
               disabled={descriptionInput === originalDescription}
             >
               Save

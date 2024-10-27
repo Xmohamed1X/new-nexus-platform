@@ -26,10 +26,11 @@ export default function CardAccordionAccept({
   showTerminate,
   cancel,
   showApprove,
-  reject,
+  showReject,
   openDispute,
   closeReject,
   font_size = "text-base",
+  escrowDateInfo
 }: any) {
   const anchorWallet = useAnchorWallet();
   const wallet = useWallet();
@@ -90,7 +91,6 @@ export default function CardAccordionAccept({
       );
       notify_delete();
       notify_success("Transaction Success!");
-      cancel();
     } catch (e) {
       notify_delete();
       notify_error("Transaction Failed!");   
@@ -161,7 +161,7 @@ export default function CardAccordionAccept({
         <Stack spacing={2} className="h-[130px] escrow overflow-y-scroll px-5">
           {data.map((el: any, i: number) => (
             <CardAppAccept
-              key={i}
+              key={i} 
               title={el.userName}
               role={el.role}
               type={type}
@@ -169,6 +169,7 @@ export default function CardAccordionAccept({
               approve={approveSubmit}
               escrow={el.escrow}
               apply={el.pubkey}
+              chat={el.description}
               escrowInfo={escrowInfo}
             />
           ))}
@@ -205,7 +206,7 @@ export default function CardAccordionAccept({
           )}
 
           <motion.button
-            disabled={(escrowInfo.status !== 1 && escrowInfo.status !== 2 && escrowInfo.status !== 3)}
+            disabled={(escrowDateInfo.submission === null)}
             className="w-full cursor-default mt-2 pt-2 pb-4 relative text-center text-base font-[500] rounded-lg disabled:opacity-25 mynamarButton"
             style={{
               boxShadow: "1px 1px 3px 1px rgba(0,0,0,0.3)",
@@ -216,7 +217,12 @@ export default function CardAccordionAccept({
               View Submission
             </div>
             <div className="absolute right-3 top-[9px] text-xl">
-              {(escrowInfo.status !== 1 && escrowInfo.status !== 2 && escrowInfo.status !== 3) ? <FaLock /> : <FaUnlock />}
+              {
+              (escrowDateInfo.submission !== null) ? 
+              <FaUnlock />
+              : 
+              <FaLock /> 
+              }
             </div>
           </motion.button>
 
@@ -232,7 +238,7 @@ export default function CardAccordionAccept({
 
               <Button
                 variant="contained"
-                onClick={() => RejectSubmit()}
+                onClick={() => showReject()}
                 className="!normal-case !text-sm !py-3 !bg-red-600 !text-white !col-span-1 !rounded-md"
               >
                 Reject
@@ -241,34 +247,38 @@ export default function CardAccordionAccept({
           )}
 
           {showTerminate && (
+            <>
+            {escrowInfo.status == 2 && 
             <CardAnimation className="grid mt-4 gap-2">
-              {escrowInfo.status == 2 && <Button
+              <Button
                 variant="contained"
                 onClick={() => Terminate()}
                 className="!normal-case !text-xs !py-3 !text-white !bg-red-700 !col-span-1 !rounded-md"
               >
                 Cancel Contract, Termination
-              </Button>}
+              </Button>
+            </CardAnimation>
+              }
 
               {escrowInfo.status == 4 && 
-              <>
+            <CardAnimation className="grid grid-cols-2 mt-3 gap-2">
               <Button
                 variant="contained"
                 onClick={() => OpenDispute()}
-                className="!normal-case !text-xs !py-3 !bg-black !text-white !col-span-1 !rounded-md"
+                className="!normal-case !text-xs !py-3 !bg-red-700 !text-white !col-span-1 !rounded-md"
               >
-                Dispute and Request termination
+                Dispute and Request Refund
               </Button>
               <Button
                 variant="contained"
                 onClick={() => RequestNewSubmitions()}
-                className="!normal-case !text-xs !py-3 !bg-black !text-white !col-span-1 !rounded-md"
+                className="!normal-case !text-xs !py-3 !bg-green-500 !text-white !col-span-1 !rounded-md"
               >
                 Request New Submition
               </Button>
-              </>
+              </CardAnimation>
               }
-            </CardAnimation>
+            </>
           )}
           {openDispute && (
             <CardAnimation>

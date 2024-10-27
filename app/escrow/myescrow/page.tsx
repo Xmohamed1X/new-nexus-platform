@@ -75,7 +75,7 @@ export default function page() {
 
         <Stack spacing={2.8} mt={3}>
           {escrows && (openContracts ?
-            escrows.filter((es) => es.status !== 5).map((el, i) => (
+            escrows.filter((es) => (es.status !== 5 && es.status !== 6)).map((el, i) => (
               <CardContract
                 key={i}
                 contractName={el.contractName}

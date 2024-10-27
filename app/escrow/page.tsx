@@ -50,6 +50,7 @@ export default function Page() {
   const fetchEscrows = async () => {
     try {
       const escrow = await getAllEscrow(connection, "confirmed");
+      console.log(escrow);
       console.log("databaseEscrowInfo");
       const databaseEscrowInfo = await backendApi.get(`/escrow`);
       console.log(databaseEscrowInfo);
@@ -288,7 +289,8 @@ export default function Page() {
           >
             {escrows &&
               escrows.map((el, i) => (
-                !el.private &&
+                (!el.private && el.status !== 6) &&
+                (el.reciever !== null ? el.reciever.toBase58() == anchorWallet?.publicKey.toBase58() : true) &&
                 <Suspense fallback={<Loading />} key={i}>
                   <CardContract
                     contractName={el.contractName}

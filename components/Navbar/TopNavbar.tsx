@@ -80,7 +80,7 @@ function classNames(...classes: any) {
 
 export default function Example() {
   const router = useRouter();
-
+  const [Info, setInfo] = useState<any>()
   const { connection } = useConnection();
 
   const anchorWallet = useAnchorWallet();
@@ -94,6 +94,7 @@ export default function Example() {
         console.log("nav push");
         router.push("/");
       }
+      setInfo(user_info);
     } catch (e) {
       console.log(e);
     }
@@ -253,18 +254,20 @@ export default function Example() {
                     >
                       <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                         <MenuItem>
-                          {({ focus }) => (
+                          {
+                          () => (
                             <div className="flex items-center gap-3 px-3 py-2">
                               <Image
                                 className="h-9 w-9 object-cover object-center rounded-full"
-                                src={Profile}
+                                src={Info.image && Info.image.length > 0 ? Info.image : Profile}
                                 alt=""
                               />
                               <div className="text-2xl text-second font-semibold pt-[1rem]">
-                                Zetsu
+                                {Info && Info.name}
                               </div>
                             </div>
-                          )}
+                          )
+                          }
                         </MenuItem>
 
                         <MenuItem>

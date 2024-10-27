@@ -1035,7 +1035,32 @@
           "isSigner": true
         },
         {
+          "name": "from",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "to",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "nexusEscrow",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
         }
@@ -1061,7 +1086,32 @@
           "isSigner": true
         },
         {
+          "name": "from",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "to",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "nexusEscrow",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
         }
@@ -1558,9 +1608,39 @@
             }
           },
           {
+            "name": "from",
+            "type": {
+              "defined": "Account<'info,TokenAccount>"
+            }
+          },
+          {
+            "name": "to",
+            "type": {
+              "defined": "Account<'info,TokenAccount>"
+            }
+          },
+          {
+            "name": "mint",
+            "type": {
+              "defined": "Account<'info,Mint>"
+            }
+          },
+          {
+            "name": "nexusEscrow",
+            "type": {
+              "defined": "UncheckedAccount<'info>"
+            }
+          },
+          {
             "name": "systemProgram",
             "type": {
               "defined": "Program<'info,System>"
+            }
+          },
+          {
+            "name": "tokenProgram",
+            "type": {
+              "defined": "Program<'info,Token>"
             }
           }
         ]

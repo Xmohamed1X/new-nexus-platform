@@ -26,14 +26,22 @@ import { closeApply } from "@/lib/NexusProgram/escrow/FreelancercloseApply";
 import { get_apply_info } from "@/lib/NexusProgram/escrow/utils.ts/get_apply_info";
 import { timeLeft } from "@/lib/utils/time_formatter";
 import { backendApi } from "@/lib/utils/api.util";
+import ApproveModal from "@/components/ApproveModal";
 
 export default function page() {
   const [material, setMaterial] = useState<string>("");
   const [deadline, setDeadline] = useState<any>();
   const [escrow_info, setEscrowInfo] = useState<any>();
+  const [escrow_info_data, setEscrowInfoData] = useState<any>();
   const [applyInfo, setApplyInfo] = useState<any>();
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+
+  const [showDispute, setShowDispute] = useState(false);
+
+  function handleShowDispute() {
+    setShowDispute(true);
+  }
 
   function handleCloseModal() {
     setOpen(false);
@@ -142,6 +150,9 @@ export default function page() {
       );
       const databaseEscrowInfo = await backendApi.get(`/escrow/${address}`);
       console.log(databaseEscrowInfo);
+      if ((databaseEscrowInfo as any)!.data!) {
+        setEscrowInfoData((databaseEscrowInfo as any).data);
+      }
       info!.private = (databaseEscrowInfo as any).private
       info!.founderInfo = founder_info;
 
@@ -273,9 +284,9 @@ export default function page() {
 
               <Stack flexDirection="row" justifyContent="center" pt={"15%"}>
                 {escrow_info &&
-                  escrow_info.founderInfo.telegramId.length > 0 ? (
+                  escrow_info.telegramLink.length > 0 ? (
                   <Button
-                    onClick={() => links(escrow_info.founderInfo.telegramId)}
+                    onClick={() => links(escrow_info.telegramLink)}
                     variant="contained"
                     className="!text-sm !px-10 !py-2 !capitalize !font-semibold !bg-second !w-56"
                   >
@@ -298,9 +309,9 @@ export default function page() {
             <Card width="lg" className=" h-fit">
               <div className="text-sm text-textColor">Description</div>
 
-              {escrow_info && <div className="py-3 mt-3">
+              {escrow_info_data && <div className="py-3 mt-3">
                 <div className="line-clamp-5 text-5 text-[13px] leading-7">
-                  {escrow_info.description}
+                  {escrow_info_data.description}
                 </div>
               </div>}
             </Card>
@@ -478,7 +489,7 @@ export default function page() {
                       <Button
                         variant="contained"
                         className="!text-xs sm:!text-sm !bg-second !px-4 !py-2 !rounded-md !normal-case !text-white !w-56"
-                        onClick={() => Dispute()}
+                        onClick={() => handleShowDispute()}
                       >
                         Dispute
                       </Button>
@@ -493,9 +504,32 @@ export default function page() {
                     </Stack>
                   </motion.div>
                 </motion.div>
+                
 
               )}
-            </Card>
+              </Card>
+            {escrow_info && <Modal
+              open={showDispute}
+              onClose={() => setShowDispute(false)}
+              className="grid place-items-center"
+            >
+              <ApproveModal
+                client={applyInfo.userName}
+                contractor={escrow_info.founderInfo.name}
+                amount={Number(escrow_info.amount) / 1000_000_000}
+                title="Confirmation"
+                messageTitle="Are you sure you want to request dispute??"
+                messageDescription="To prevent abuse, we charge a dispute resolution fees. Please try as much as possible ro resolve your issue before opening a dispute"
+              >
+                <Button
+                  onClick={() => Dispute()}
+                  variant="contained"
+                  className="!normal-case !text-black !text-sm !bg-green-500 !px-8 !py-2"
+                >
+                  Dispute
+                </Button>
+              </ApproveModal>
+            </Modal>}
           </div>
         </div>
       </div>
