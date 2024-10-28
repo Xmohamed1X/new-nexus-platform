@@ -175,7 +175,7 @@ export default function page() {
         editForm.telegram_id,
         editForm.website,
         editForm.linkedin,
-        editForm.twitter,
+        editForm.twitterId,
         editForm.country,
         editForm.timeZone,
         wallet

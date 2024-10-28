@@ -106,7 +106,7 @@ export async function update_user(
   // wallet.sendTransaction(tx, connection, {
   //   preflightCommitment: 'confirmed',
   // });
-  console.log(timezone);
+  console.log("twitter: " + twitter);
   const apiResponse = await backendApi.patch(`/nexus-user/${anchorWallet.publicKey.toBase58()}`, {
     name,
     image: "https://www.youtube.com/",
@@ -123,7 +123,7 @@ export async function update_user(
     timeZone: timezone,
     country,
     address: anchorWallet.publicKey.toBase58(),
-    twitter: "https://www.youtube.com/",
+    twitter: twitter,
     linkedin: "https://www.youtube.com/",
     discordId: "https://www.youtube.com/",
     telegramId: "https://www.youtube.com/",
