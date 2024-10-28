@@ -186,7 +186,7 @@ export default function CardAccordionAccept({
             <div className="w-full p-4 text-center rounded-lg border border-black/30 mt-9 text-xs ">
               {
               escrowInfo.status == 4 ?
-              "Waiting for the Frelancer To Terminate or Dispute"
+              "You rejected the submission, please click on terminate to Dispute and End the contract or Request New Submission"
               :
               (escrowInfo.status == 5 ?
               "You are on Dispute Phase Now"
@@ -255,7 +255,7 @@ export default function CardAccordionAccept({
                 onClick={() => Terminate()}
                 className="!normal-case !text-xs !py-3 !text-white !bg-red-700 !col-span-1 !rounded-md"
               >
-                Cancel Contract, Termination
+                Terminate Contract
               </Button>
             </CardAnimation>
               }
