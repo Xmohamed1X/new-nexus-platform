@@ -2,6 +2,7 @@
 
 import { NavigationType } from "@/lib/types/types";
 import { get_user_info } from "@/lib/user/utils/user_info";
+import { backendApi } from "@/lib/utils/api.util";
 import Logo from "@/public/Logo.png";
 import Profile from "@/public/profile.png";
 import {
@@ -90,8 +91,13 @@ export default function Example() {
     try {
       const user_info = await get_user_info(anchorWallet, connection);
       console.log("nav");
+      const databaseEscrowInfo = await backendApi.get(`/nexus-user/${user_info?.address.toBase58()}`);
+
+      console.log("databaseEscrowInfo")
+      console.log(databaseEscrowInfo)
+
       if (!user_info) {
-        console.log("nav push");
+        console.log("nav push"); 
         router.push("/");
       }
       setInfo(user_info);
@@ -259,7 +265,7 @@ export default function Example() {
                             <div className="flex items-center gap-3 px-3 py-2">
                               <Image
                                 className="h-9 w-9 object-cover object-center rounded-full"
-                                src={Info.image && Info.image.length > 0 ? Info.image : Profile}
+                                src={Info && Info.image && Info.image.length > 0 ? Info.image : Profile}
                                 alt=""
                               />
                               <div className="text-2xl text-second font-semibold pt-[1rem]">
