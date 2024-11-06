@@ -191,17 +191,20 @@ export default function page() {
   };
 
   const output = (value: string, name: string) => {
-    if (value.length > 0) {
+    console.log(name)
+    console.log(value)
+    if (value && value.length > 0) {
       return value;
     } else {
       name;
     }
+    console.log("sucsees fro: " + name);
   };
 
   const stringLengthHandle = (string: string) => {
     console.log("stringLengthHandle");
     console.log(string);
-    if (string.length > 25) {
+    if (string && string.length > 25) {
       return (
         string.slice(0, 20) +
         "..." +
