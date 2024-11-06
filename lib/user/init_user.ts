@@ -92,7 +92,7 @@ export async function init_user(
 
   const apiResponse = await backendApi.post('/nexus-user/init', {
     name,
-    image: "https://www.youtube.com/",
+    image: "https://shdw-drive.genesysgo.net/Gk76WGVRU7Mwkn5WkJWC1Wm4vAJVVZXG7dFhGQv1CHLv/146.png",
     others: others,
     twitter: twitter,
     address: anchorWallet.publicKey.toBase58(),

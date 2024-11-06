@@ -33,6 +33,7 @@ export default function page() {
   const [open, setOpen] = useState(false);
   const [applyInfo, setApplyInfo] = useState<any>();
   const [telegram, setTelegram] = useState<string>("");
+  const [escrowInfo, setEscrowInfo] = useState<any>();
   const [escrowDateInfo, setEscrowDateInfo] = useState<any>();
 
   function handleCloseModal() {
@@ -43,7 +44,6 @@ export default function page() {
     setOpen(true);
   }
 
-  const [escrowInfo, setEscrowInfo] = useState<any>();
   const anchorWallet = useAnchorWallet();
   const wallet = useWallet();
   const { connection } = useConnection();
@@ -214,7 +214,7 @@ export default function page() {
               alignItems="center"
               gap={2}
             >
-              <div className="text-sm font-[500]">Private</div>
+              <div className="text-sm font-[500]">{escrowDateInfo && escrowDateInfo.private ? "Private" : "Public"}</div>
               <div className="flex flex-col space-y-2">
                 <div className="text-xs text-textColor">Deadline</div>
                 <div className="text-base font-semibold line-clamp-1">

@@ -16,6 +16,7 @@ import { notify_delete, notify_error, notify_laoding, notify_success } from "@/a
 import { founderOpenDispute } from "@/lib/NexusProgram/escrow/CopenDipute";
 import { ClientTerminat } from "@/lib/NexusProgram/escrow/CTerminate";
 import { RequestNewSubmition } from "@/lib/NexusProgram/escrow/RequestNewSubmition";
+import { links } from "@/app/layout";
 
 export default function CardAccordionAccept({
   children,
@@ -206,6 +207,7 @@ export default function CardAccordionAccept({
           )}
 
           <motion.button
+            onClick={() =>  escrowDateInfo.submission !== null && links(escrowDateInfo.submission)}
             disabled={(escrowDateInfo.submission === null)}
             className="w-full cursor-default mt-2 pt-2 pb-4 relative text-center text-base font-[500] rounded-lg disabled:opacity-25 mynamarButton"
             style={{
