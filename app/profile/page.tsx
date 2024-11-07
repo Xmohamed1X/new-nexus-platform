@@ -66,6 +66,7 @@ export default function page() {
     timeZone: null,
     linkResume: null,
     linkPortfolio: null,
+    twitterId: null
   });
 
   const theme = createTheme({
@@ -109,6 +110,7 @@ export default function page() {
         timeZone: (databaseEscrowInfo as any)!.data.timezone,
         linkResume: (databaseEscrowInfo as any)!.data.resume,
         linkPortfolio: (databaseEscrowInfo as any)!.data.portfolio,
+        twitterId: (databaseEscrowInfo as any)!.data.twitter,
       });
 
       setUserInfo((databaseEscrowInfo as any).data);

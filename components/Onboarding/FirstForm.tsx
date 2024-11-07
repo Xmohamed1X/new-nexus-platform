@@ -55,6 +55,7 @@ export default function FirstForm({ handleGoToStep }: any) {
       }
       notify_laoding("Transaction Pending...!");
       console.log(watch("email"));
+      console.log(watch("twitterProfile"));
 
       await init_user(
         anchorWallet,
