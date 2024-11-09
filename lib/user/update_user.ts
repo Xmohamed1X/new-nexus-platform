@@ -128,7 +128,13 @@ export async function update_user(
     discordId: "https://www.youtube.com/",
     telegramId: "https://www.youtube.com/",
     website: "https://www.youtube.com/",
-  });
+  })
+  .then((e) => console.log(e))
+  .catch((e) => {
+    console.log(e)
+    throw e;
+  })
+  ;
 
   console.log(apiResponse);
   //   if(!apiResponse) {console.log('Do something')}
