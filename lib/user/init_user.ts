@@ -52,6 +52,7 @@ export async function init_user(
     [anchorWallet.publicKey.toBuffer(), Buffer.from(USER_PREFIX)],
     PROGRAM_ID
   );
+  console.log("twitter: " + twitter);
 
   const tx = await program.methods
     .initUser({
