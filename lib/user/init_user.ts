@@ -1,8 +1,8 @@
-import { AnchorProvider, BN, Program, web3 } from '@project-serum/anchor';
-import { USER_PREFIX } from '../constants/constants';
-import { count, profile } from 'console';
-import { backendApi } from '../utils/api.util';
-const idl = require('../../data/nexus.json');
+import { AnchorProvider, BN, Program, web3 } from "@project-serum/anchor";
+import { USER_PREFIX } from "../constants/constants";
+import { count, profile } from "console";
+import { backendApi } from "../utils/api.util";
+const idl = require("../../data/nexus.json");
 
 /** 
     nigotion: bool,
@@ -42,7 +42,7 @@ export async function init_user(
   wallet: any
 ) {
   const provider = new AnchorProvider(connection, anchorWallet, {
-    preflightCommitment: 'processed',
+    preflightCommitment: "processed",
   });
 
   const PROGRAM_ID = new web3.PublicKey(idl.metadata.address);
@@ -77,22 +77,23 @@ export async function init_user(
       systemProgram: web3.SystemProgram.programId,
     })
     .transaction();
-    // .rpc({
-    //   commitment: 'confirmed',
-    // });
-  
-    const blockhash = (await connection.getLatestBlockhash()).blockhash
-    tx.recentBlockhash = blockhash;
-    tx.feePayer = anchorWallet.publicKey;
+  // .rpc({
+  //   commitment: 'confirmed',
+  // });
 
-    await wallet.sendTransaction(tx, connection, {
-      preflightCommitment: "confirmed"
-    })
-  
+  const blockhash = (await connection.getLatestBlockhash()).blockhash;
+  tx.recentBlockhash = blockhash;
+  tx.feePayer = anchorWallet.publicKey;
 
-  const apiResponse = await backendApi.post('/nexus-user/init', {
+  await wallet.sendTransaction(tx, connection, {
+    preflightCommitment: "confirmed",
+  });
+
+  const apiResponse = await backendApi.post("/nexus-user/init", {
     name,
-    image: "https://shdw-drive.genesysgo.net/Gk76WGVRU7Mwkn5WkJWC1Wm4vAJVVZXG7dFhGQv1CHLv/146.png",
+    image: image
+      ? image
+      : "https://shdw-drive.genesysgo.net/Gk76WGVRU7Mwkn5WkJWC1Wm4vAJVVZXG7dFhGQv1CHLv/146.png",
     others: others,
     twitter: twitter,
     address: anchorWallet.publicKey.toBase58(),
