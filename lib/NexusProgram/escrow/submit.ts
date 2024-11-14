@@ -37,7 +37,7 @@ export async function submit(
   // );
 
   const tx = await program.methods
-    .submit()
+    .submit(submission)
     .accounts({
       escrow: escrow,
       reciever: reciever,

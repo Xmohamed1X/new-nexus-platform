@@ -207,8 +207,8 @@ export default function CardAccordionAccept({
           )}
 
           <motion.button
-            onClick={() =>  escrowDateInfo.submission !== null && links(escrowDateInfo.submission)}
-            disabled={(escrowDateInfo.submission === null)}
+            onClick={() =>  escrowInfo.telegramLink.length > 0 && links(escrowInfo.telegramLink)}
+            disabled={(escrowInfo.telegramLink.length === 0)}
             className="w-full cursor-default mt-2 pt-2 pb-4 relative text-center text-base font-[500] rounded-lg disabled:opacity-25 mynamarButton"
             style={{
               boxShadow: "1px 1px 3px 1px rgba(0,0,0,0.3)",
