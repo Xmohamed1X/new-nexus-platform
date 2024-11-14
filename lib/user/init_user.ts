@@ -111,6 +111,8 @@ export async function init_user(
     // timezone: "",
     // country: "",
   });
+
+  console.log({ apiResponse });
   //   if(!apiResponse) {console.log('Do something')}
 
   // return tx;
