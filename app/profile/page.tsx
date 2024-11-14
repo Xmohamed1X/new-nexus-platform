@@ -66,7 +66,7 @@ export default function page() {
     timeZone: null,
     linkResume: null,
     linkPortfolio: null,
-    twitterId: null
+    twitterId: null,
   });
 
   const theme = createTheme({
@@ -82,7 +82,11 @@ export default function page() {
         PROGRAM_ID
       );
 
-      console.log(freelancer.toBase58());
+      console.log(
+        freelancer.toBase58(),
+        anchorWallet?.publicKey.toBase58(),
+        "...."
+      );
 
       const user_info = await get_userr_info(
         anchorWallet,
@@ -97,7 +101,7 @@ export default function page() {
       );
 
       console.log("databaseEscrowInfo");
-      console.log(databaseEscrowInfo);
+      console.log({ databaseEscrowInfo }, "....");
 
       setEditForm({
         username: (databaseEscrowInfo as any)!.data.name,
@@ -158,7 +162,7 @@ export default function page() {
       // linkResume: null,
       // linkPortfolio: null,
 
-      await update_user(
+      const res = await update_user(
         anchorWallet,
         connection,
         // watch.sdfdsf,
@@ -182,6 +186,8 @@ export default function page() {
         editForm.timeZone,
         wallet
       );
+
+      console.log({ res });
       notify_delete();
       notify_success("Transaction Success!");
       setShowEdit(false);
@@ -193,8 +199,8 @@ export default function page() {
   };
 
   const output = (value: string, name: string) => {
-    console.log(name)
-    console.log(value)
+    console.log(name);
+    console.log(value);
     if (value && value.length > 0) {
       return value;
     } else {
@@ -233,7 +239,7 @@ export default function page() {
                 </Button>
               </div>
               <div className="m-[auto] !px-[0.8rem] pt-[0.8rem] rounded-xl">
-                <Image src={dragon} alt="dragon" />
+                <img src={userInfo ? userInfo.image : dragon} alt="dragon" />
               </div>
             </div>
             <div className="px-4 pb-4">
@@ -376,7 +382,9 @@ export default function page() {
               <div className={`${cardStyle} !py-4`}>
                 {userInfo && output(userInfo.country, "Country")}
               </div>
-              <div className={`${cardStyle} !py-4`}>{userInfo && output(userInfo.timeZone, "Time Zone")}</div>
+              <div className={`${cardStyle} !py-4`}>
+                {userInfo && output(userInfo.timeZone, "Time Zone")}
+              </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 px-1">
@@ -399,120 +407,131 @@ export default function page() {
           onClose={() => setShowEdit(false)}
           className="grid place-items-center overflow-y-scroll"
         >
-          <Card width="md">
-            <Stack spacing={3}>
-              <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
-                <TextField
-                  label="Username"
-                  variant="outlined"
-                  value={editForm.username}
-                  onChange={(e) =>
-                    setEditForm({ ...editForm, username: e.target.value })
-                  }
-                  sx={inputMuiFontSize}
-                />
+          <form onSubmit={onSubmit}>
+            <Card width="md">
+              <Stack spacing={3}>
+                <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
+                  <TextField
+                    label="Username"
+                    variant="outlined"
+                    value={editForm.username}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, username: e.target.value })
+                    }
+                    sx={inputMuiFontSize}
+                  />
+
+                  <TextField
+                    label="Twitter Id"
+                    variant="outlined"
+                    value={editForm.twitterId}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, twitterId: e.target.value })
+                    }
+                    sx={inputMuiFontSize}
+                    style={{ width: "20rem" }}
+                  />
+                </Stack>
+
+                <div className="grid gap-6 grid-cols-1 sm:grid-cols-3">
+                  <TextField
+                    label="Role Description"
+                    variant="outlined"
+                    value={editForm.roleDescription}
+                    onChange={(e) =>
+                      setEditForm({
+                        ...editForm,
+                        roleDescription: e.target.value,
+                      })
+                    }
+                    sx={inputMuiFontSize}
+                  />
+
+                  <ExpertiseLevelInput
+                    editForm={editForm}
+                    setEditForm={setEditForm}
+                  />
+
+                  <TextField
+                    label="Payment Rate"
+                    variant="outlined"
+                    value={editForm.paymentRate}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, paymentRate: e.target.value })
+                    }
+                    sx={inputMuiFontSize}
+                  />
+                </div>
 
                 <TextField
-                  label="Twitter Id"
+                  label="Profile Overveiw"
                   variant="outlined"
-                  value={editForm.twitterId}
-                  onChange={(e) =>
-                    setEditForm({ ...editForm, twitterId: e.target.value })
-                  }
-                  sx={inputMuiFontSize}
-                  style={{ width: "20rem" }}
-                />
-              </Stack>
-
-              <div className="grid gap-6 grid-cols-1 sm:grid-cols-3">
-                <TextField
-                  label="Role Description"
-                  variant="outlined"
-                  value={editForm.roleDescription}
+                  multiline
+                  rows={6}
+                  value={editForm.profileOverview}
                   onChange={(e) =>
                     setEditForm({
                       ...editForm,
-                      roleDescription: e.target.value,
+                      profileOverview: e.target.value,
                     })
                   }
                   sx={inputMuiFontSize}
                 />
 
-                <ExpertiseLevelInput
-                  editForm={editForm}
-                  setEditForm={setEditForm}
-                />
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                  <TextField
+                    label="Category"
+                    variant="outlined"
+                    value={editForm.category}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, category: e.target.value })
+                    }
+                    sx={inputMuiFontSize}
+                  />
 
-                <TextField
-                  label="Payment Rate"
-                  variant="outlined"
-                  value={editForm.paymentRate}
-                  onChange={(e) =>
-                    setEditForm({ ...editForm, paymentRate: e.target.value })
-                  }
-                  sx={inputMuiFontSize}
-                />
-              </div>
+                  <CountryInput editForm={editForm} setEditForm={setEditForm} />
 
-              <TextField
-                label="Profile Overveiw"
-                variant="outlined"
-                multiline
-                rows={6}
-                value={editForm.profileOverview}
-                onChange={(e) =>
-                  setEditForm({ ...editForm, profileOverview: e.target.value })
-                }
-                sx={inputMuiFontSize}
-              />
+                  <TimeZoneInput
+                    editForm={editForm}
+                    setEditForm={setEditForm}
+                  />
+                </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                <TextField
-                  label="Category"
-                  variant="outlined"
-                  value={editForm.category}
-                  onChange={(e) =>
-                    setEditForm({ ...editForm, category: e.target.value })
-                  }
-                  sx={inputMuiFontSize}
-                />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <TextField
+                    label="Link Resume"
+                    variant="outlined"
+                    value={editForm.linkResume}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, linkResume: e.target.value })
+                    }
+                    sx={inputMuiFontSize}
+                  />
 
-                <CountryInput editForm={editForm} setEditForm={setEditForm} />
+                  <TextField
+                    label="Link Portfolio"
+                    variant="outlined"
+                    value={editForm.linkPortfolio}
+                    onChange={(e) =>
+                      setEditForm({
+                        ...editForm,
+                        linkPortfolio: e.target.value,
+                      })
+                    }
+                    sx={inputMuiFontSize}
+                  />
+                </div>
 
-                <TimeZoneInput editForm={editForm} setEditForm={setEditForm} />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <TextField
-                  label="Link Resume"
-                  variant="outlined"
-                  value={editForm.linkResume}
-                  onChange={(e) =>
-                    setEditForm({ ...editForm, linkResume: e.target.value })
-                  }
-                  sx={inputMuiFontSize}
-                />
-
-                <TextField
-                  label="Link Portfolio"
-                  variant="outlined"
-                  value={editForm.linkPortfolio}
-                  onChange={(e) =>
-                    setEditForm({ ...editForm, linkPortfolio: e.target.value })
-                  }
-                  sx={inputMuiFontSize}
-                />
-              </div>
-
-              <Button
-                onClick={() => onSubmit()}
-                variant="contained"
-                className="!mt-8 !text-black !bg-main !text-xs !px-6 !py-2 !normal-case !w-fit !mx-auto !font-mynamarButton"
-              >
-                Save
-              </Button>
-            </Stack>
-          </Card>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  className="!mt-8 !text-black !bg-main !text-xs !px-6 !py-2 !normal-case !w-fit !mx-auto !font-mynamarButton"
+                >
+                  Save
+                </Button>
+              </Stack>
+            </Card>
+          </form>
         </Modal>
       </ThemeProvider>
     </div>
