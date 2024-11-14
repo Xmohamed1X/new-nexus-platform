@@ -10,14 +10,16 @@ import { FormContext } from "@/contexts/FormContext";
 import { OnboardingScreenForm } from "@/lib/types/types";
 import { init_user } from "@/lib/user/init_user";
 import { get_user_info } from "@/lib/user/utils/user_info";
+import { backendApi } from "@/lib/utils/api.util";
 import { zodResolver } from "@hookform/resolvers/zod";
-import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import { Button, Stack } from "@mui/material";
 import {
   useAnchorWallet,
   useConnection,
   useWallet,
 } from "@solana/wallet-adapter-react";
+import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -25,6 +27,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 export default function FirstForm({ handleGoToStep }: any) {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string>("");
 
   const anchorWallet = useAnchorWallet();
   const wallet = useWallet();
@@ -42,72 +45,8 @@ export default function FirstForm({ handleGoToStep }: any) {
     mode: "onChange",
   });
 
-  // Watching form fields
-  const watchedUsername = watch("username");
-  const watchedTwitterProfile = watch("twitterProfile");
-  const watchedEmail = watch("email");
-
-  const onSubmit: SubmitHandler<OnboardingScreenForm> = async (data: any) => {
-    try {
-      console.log("wow");
-      if (!isValid) {
-        return console.log("still some empty;");
-      }
-      notify_laoding("Transaction Pending...!");
-      console.log(watch("email"));
-      console.log(watch("twitterProfile"));
-
-      await init_user(
-        anchorWallet,
-        connection,
-        // watch.sdfdsf,
-        watch("username"),
-        "",
-        "",
-        "",
-        "",
-        watch("email"),
-        "",
-        // "payment_rate_per_hour",
-        0,
-        // "nogotion",
-        true,
-        "",
-        "",
-        "",
-        "",
-        "",
-        watch("twitterProfile"),
-        wallet
-      );
-
-      const formData = new FormData();
-      if (imageFile) {
-        formData.append("uploadedFile", imageFile);
-      }
-
-      for (const key in data) {
-        formData.append(key, data[key as keyof OnboardingScreenForm] as string);
-      }
-
-      console.log("Form Data:", {
-        ...data,
-        profileImage: imageFile,
-        formData,
-      });
-
-      handleGoToStep("second");
-      notify_delete();
-      notify_success("Transaction Success!");
-    } catch (e) {
-      notify_delete();
-      notify_error("Transaction Failed!");
-      console.log(e);
-    }
-  };
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("wow1");
+  // Upload image function using axios
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setImageFile(file);
@@ -116,6 +55,68 @@ export default function FirstForm({ handleGoToStep }: any) {
         setImagePreview(reader.result as string);
       };
       reader.readAsDataURL(file);
+
+      // Upload image as soon as it's selected
+      try {
+        const formData = new FormData();
+        formData.append("uploadedFile", file);
+
+        const response: Record<string, any> = await backendApi.post(
+          "/bucket/upload",
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
+        );
+
+        // Assume the response contains the uploaded image URL
+        console.log({ response }, ".....");
+        setUploadedImageUrl(response.data.metaData.url);
+      } catch (error) {
+        console.error("Image upload failed:", error);
+        notify_error("Image upload failed");
+      }
+    }
+  };
+  // Watching form fields
+  const watchedUsername = watch("username");
+  const watchedTwitterProfile = watch("twitterProfile");
+  const watchedEmail = watch("email");
+
+  const onSubmit: SubmitHandler<OnboardingScreenForm> = async (data) => {
+    if (!isValid) return;
+
+    const loadingToastId = notify_laoding("Transaction Pending...!");
+    try {
+      await init_user(
+        anchorWallet,
+        connection,
+        watchedUsername,
+        uploadedImageUrl, // use the uploaded image URL here
+        "",
+        "",
+        "",
+        "",
+        watchedEmail,
+        0,
+        true,
+        "",
+        "",
+        "",
+        "",
+        "",
+        watchedTwitterProfile,
+        wallet
+      );
+
+      // Proceed to next step
+      handleGoToStep("second");
+      notify_success("Transaction Success!");
+      notify_delete(loadingToastId);
+    } catch (e) {
+      notify_delete(loadingToastId);
+      notify_error("Transaction Failed!");
+      console.error(e);
     }
   };
 
@@ -146,59 +147,6 @@ export default function FirstForm({ handleGoToStep }: any) {
     check_user();
   }, [anchorWallet, anchorWallet?.publicKey]);
 
-  // async function initialize_user() {
-  //   try {
-  //     // if (profile_overview.length > 120) {
-  //     //   return notify_warning(
-  //     //     "Profile Overview need to be at least 120 characters!"
-  //     //   );
-  //     // }
-
-  //     // notify_laoding("Creating Profile...");
-  //     // setLoading(true);
-
-  //     // const watchedUsername = watch("username");
-  //     // const watchedTwitterProfile = watch("twitterProfile");
-  //     // const watchedEmail = watch("email");
-  //     if (!isValid) {
-  //       return console.log("still some empty;")
-  //     }
-  //     console.log(watch("email"));
-
-  //     await init_user(
-  //       anchorWallet,
-  //       connection,
-  //       // watch.sdfdsf,
-  //       watch("username"),
-  //       "",
-  //       "",
-  //       "",
-  //       "",
-  //       watch("email"),
-  //       "",
-  //       // "payment_rate_per_hour",
-  //       0,
-  //       // "nogotion",
-  //       true,
-  //       "",
-  //       "",
-  //       "",
-  //       "",
-  //       "",
-  //       watch("twitterProfile"),
-  //       wallet
-  //     );
-  //     // notify_delete();
-  //     // notify_success("Profile Created!");
-  //     // setLoading(false);
-  //   } catch (e) {
-  //     // setLoading(false);
-  //     // notify_delete();
-  //     // notify_error("Transaction Failed");
-  //     console.log(e);
-  //   }
-  // }
-
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack alignItems="center" gap={5}>
@@ -206,7 +154,7 @@ export default function FirstForm({ handleGoToStep }: any) {
           gap={3}
           className="flex-col md:!flex-row items-center sm:items-end pt-5"
         >
-          <div className="rounded-2xl bg-white relative h-fit">
+          <div className="rounded-2xl bg-white relative w-[14rem] h-[14rem]">
             {imagePreview ? (
               <img
                 src={imagePreview}
@@ -214,7 +162,10 @@ export default function FirstForm({ handleGoToStep }: any) {
                 className="w-[230px] h-[230px] object-cover object-center rounded-2xl border border-white"
               />
             ) : (
-              <AddPhotoAlternateIcon className="text-[#F3F3F3] !text-9xl sm:!text-[230px]" />
+              <div className="border-2 h-[85%] mx-[1rem] mt-[1rem] border-dashed rounded m-auto flex flex-col items-center justify-center border-gray-300">
+                <CameraAltIcon className="text-[#F3F3F3] !text-[83px]  w-[5rem]" />
+                <p className="text-[#BABABA] text-sm">Upload Image</p>
+              </div>
             )}
             <input
               type="file"
@@ -298,15 +249,16 @@ export default function FirstForm({ handleGoToStep }: any) {
           </div>
         </Stack>
 
-        <Button
-          // onClick={() => initialize_user()}
-          className="!bg-main !text-second !font-semibold !text-sm !capitalize !px-12 !py-2 disabled:!bg-main/30 disabled:!text-black/40 font-mulish"
-          variant="contained"
-          disabled={!isValid}
-          type="submit"
-        >
-          Next
-        </Button>
+        <div className="md:!ml-[15rem]">
+          <Button
+            className="!bg-main !text-second !font-semibold !text-sm !capitalize !px-12 !py-2 disabled:!bg-main/30 disabled:!text-black/40 font-mulish "
+            variant="contained"
+            disabled={!isValid}
+            type="submit"
+          >
+            Next
+          </Button>
+        </div>
       </Stack>
     </form>
   );

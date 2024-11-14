@@ -1,7 +1,6 @@
 import Loading from "@/components/Loading";
 import React from "react";
-import { toast } from "react-toastify";
-
+import { Id, toast } from "react-toastify";
 
 export const notify_success = (msg: string) => {
   return toast.success(msg, {
@@ -24,11 +23,16 @@ export const notify_error = (msg: string) => {
 export const notify_laoding = (msg: string) => {
   return toast.loading(msg, {
     position: toast.POSITION.TOP_CENTER,
+    autoClose: 5000,
+    toastId: msg,
   });
 };
-
-export const notify_delete = () => {
-  toast.dismiss();
+// export const notify_delete = () => {
+//   toast.dismiss();
+// =======
+export const notify_delete = (msg?: Id) => {
+  toast.dismiss(msg);
+// >>>>>>> 6fe9b05b68af612c7dee16f52fe15c89396476cf
 };
 
 export default function loading() {
