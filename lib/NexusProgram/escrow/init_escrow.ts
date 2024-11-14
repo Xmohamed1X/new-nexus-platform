@@ -74,7 +74,7 @@ export async function initEscrow(
     .initEscrow({
       contractName: contact_name,
       deadline: new BN(deadline),
-      amount: new BN(amount * 1_000_000_000),
+      amount: new BN(amount * 1_000_000),
       telegramLink: telegram_link,
       materials: materials,
       description: "description",

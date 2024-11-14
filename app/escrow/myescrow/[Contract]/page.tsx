@@ -491,7 +491,7 @@ export default function page() {
               <Stack flexDirection="row" alignItems="start" gap={1}>
                 <Image src={Coin} alt="coin" className="w-5 pt-[2px]" />
                 <div className="text-sm sm:text-xl font-semibold leading-none ">
-                  {escrowInfo ? Number(escrowInfo.amount) / 1000_000_000 : "--"}
+                  {escrowInfo ? Number(escrowInfo.amount) / 1000_000 : "--"}
                 </div>
               </Stack>
             </Stack>
@@ -756,7 +756,7 @@ export default function page() {
                   ap.user.toBase58() === escrowInfo.reciever.toBase58()
               )[0].userName
             }
-          amount={Number(escrowInfo.amount) / 1000_000_000}
+          amount={Number(escrowInfo.amount) / 1000_000}
           title="Confirmation"
           messageTitle="Are you sure you want to approve submission??"
           messageDescription="Money will be released to the contractor and Contract will be Terminated!"
@@ -783,7 +783,7 @@ export default function page() {
                   ap.user.toBase58() === escrowInfo.reciever.toBase58()
               )[0].userName
             }
-          amount={Number(escrowInfo.amount) / 1000_000_000}
+          amount={Number(escrowInfo.amount) / 1000_000}
           title="Confirmation"
           messageTitle="Are you sure you want to reject submission??"
           messageDescription=""
@@ -805,7 +805,7 @@ export default function page() {
       >
         <ApproveModal
           contractor={(applys.filter((escrow: any) => escrow.pubkey.toBase58() == select.toBase58()))[0].userName}
-          amount={Number(escrowInfo.amount) / 1000_000_000}
+          amount={Number(escrowInfo.amount) / 1000_000}
           title="Confirmation"
           messageTitle="Are you sure to start the contract??"
           messageDescription="Contract can oly be terminated by both parties mutually agreeing to do so"

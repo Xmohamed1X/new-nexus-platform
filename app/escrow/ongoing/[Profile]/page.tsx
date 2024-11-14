@@ -218,7 +218,7 @@ export default function page() {
               <Stack flexDirection="row" gap={1} alignItems={"flex-start"}>
                 <Image src={coin} alt="coin" className="w-5" />
                 <div className="font-myanmar_khyay">
-                  {escrow_info ? Number(escrow_info.amount) / 1000_000_000 : "--"}
+                  {escrow_info ? Number(escrow_info.amount) / 1000_000 : "--"}
                 </div>
               </Stack>
             </Stack>
@@ -516,7 +516,7 @@ export default function page() {
               <ApproveModal
                 client={applyInfo.userName}
                 contractor={escrow_info.founderInfo.name}
-                amount={Number(escrow_info.amount) / 1000_000_000}
+                amount={Number(escrow_info.amount) / 1000_000}
                 title="Confirmation"
                 messageTitle="Are you sure you want to request dispute??"
                 messageDescription="To prevent abuse, we charge a dispute resolution fees. Please try as much as possible ro resolve your issue before opening a dispute"

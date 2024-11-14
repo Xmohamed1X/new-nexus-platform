@@ -57,7 +57,7 @@ export default function CardContract({
               <Image src={coin} alt="coin" className="w-4 mt-1" />
             </div>
             <div className="text-base sm:text-lg h-fit">
-              {amount ? (amount / 1000_000_000) : "N/A"}
+              {amount ? (amount / 1000_000) : "N/A"}
             </div>
           </Stack>
 
