@@ -245,8 +245,9 @@ export default function Example() {
                         <span className="sr-only">Open user menu</span>
                         <Image
                           className="h-8 w-8 rounded-full object-cover object-center"
-                          src={Profile}
-                          alt=""
+                          width={300}
+                          height={300}
+                          src={Info && Info.image && Info.image.length > 0 ? Info.image : Profile}                          alt=""
                         />
                       </MenuButton>
                     </div>
@@ -265,6 +266,8 @@ export default function Example() {
                             <div className="flex items-center gap-3 px-3 py-2">
                               <Image
                                 className="h-9 w-9 object-cover object-center rounded-full"
+                                width={300}
+                                height={300}
                                 src={Info && Info.image && Info.image.length > 0 ? Info.image : Profile}
                                 alt=""
                               />

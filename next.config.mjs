@@ -13,6 +13,9 @@ const nextConfig = {
         },
         {
           hostname: "ipfs.io"
+        },
+        {
+          hostname: "res.cloudinary.com"
         }
       ],
     },
