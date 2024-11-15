@@ -53,6 +53,7 @@ export async function init_user(
     PROGRAM_ID
   );
   console.log("twitter: " + twitter);
+  console.log("image: " + image);
 
   const tx = await program.methods
     .initUser({

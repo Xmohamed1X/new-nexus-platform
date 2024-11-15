@@ -718,7 +718,12 @@
           "isSigner": false
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "submission",
+          "type": "string"
+        }
+      ]
     },
     {
       "name": "approvePayment",
@@ -1674,10 +1679,6 @@
           {
             "name": "amount",
             "type": "u64"
-          },
-          {
-            "name": "telegramLink",
-            "type": "string"
           },
           {
             "name": "materials",

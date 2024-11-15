@@ -70,11 +70,13 @@ export async function initEscrow(
     SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID
   );
 
+  console.log(NexusEscrowTokenAccount.toBase58())
+
   const tx = await program.methods
     .initEscrow({
       contractName: contact_name,
       deadline: new BN(deadline),
-      amount: new BN(amount * 1_000_000_000),
+      amount: new BN(amount * 1_000_000),
       telegramLink: telegram_link,
       materials: materials,
       description: "description",
@@ -100,9 +102,10 @@ export async function initEscrow(
   tx.feePayer = anchorWallet.publicKey;
 
 
-  await wallet.sendTransaction(tx, connection, {
-    preflightCommitment: "confirmed"
-  })
+  const signTx = await wallet.signTransaction(tx);
+
+  const hash = await connection.sendRawTransaction(signTx.serialize());
+  console.log(hash);
 
   const apiResponse = await backendApi.post('/escrow/init', {
     contactName: contact_name,
