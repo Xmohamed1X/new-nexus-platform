@@ -8,7 +8,7 @@ interface NavigationType {
   name: string;
   path: string;
 }
-
+ 
 const navigation: NavigationType[] = [
   { name: "Home", path: "/escrow" },
   { name: "My Escrows", path: "/escrow/myescrow" },
